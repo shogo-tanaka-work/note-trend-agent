@@ -33,7 +33,7 @@ def judge_theme(scored: ScoredArticle, client: OpenAI) -> float:
 
     message = client.chat.completions.create(
         model=JUDGE_MODEL,
-        max_tokens=64,
+        max_completion_tokens=4096,
         response_format={"type": "json_object"},
         messages=[
             {"role": "system", "content": THEME_SYSTEM_PROMPT},
@@ -73,7 +73,7 @@ Discord通知向けの簡潔な文体（です・ます不要）で。
 """
     message = client.chat.completions.create(
         model=NOTIFY_MODEL,
-        max_tokens=200,
+        max_completion_tokens=4096,
         messages=[{"role": "user", "content": prompt}],
     )
     return message.choices[0].message.content.strip()

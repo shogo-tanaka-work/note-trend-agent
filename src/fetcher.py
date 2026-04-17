@@ -9,6 +9,17 @@ from scorer import Article
 BASE_URL = "https://note.com/api"
 DEFAULT_DELAY = (1.0, 3.0)  # (min, max) seconds
 
+_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
+    ),
+    "Referer": "https://note.com/",
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Language": "ja,en-US;q=0.9,en;q=0.8",
+}
+
 
 def _delay() -> None:
     time.sleep(random.uniform(*DEFAULT_DELAY))
@@ -24,7 +35,7 @@ def search_notes(keyword: str, per_page: int = 20) -> list[dict]:
     url = f"{BASE_URL}/v3/searches"
     params = {"context": "note", "q": keyword, "per": per_page}
 
-    with httpx.Client(timeout=10.0) as client:
+    with httpx.Client(timeout=10.0, headers=_HEADERS) as client:
         response = client.get(url, params=params)
         response.raise_for_status()
 
@@ -36,7 +47,7 @@ def get_creator(creator_id: str) -> dict:
     """クリエイター情報（フォロワー数など）を取得する。"""
     url = f"{BASE_URL}/v2/creators/{creator_id}"
 
-    with httpx.Client(timeout=10.0) as client:
+    with httpx.Client(timeout=10.0, headers=_HEADERS) as client:
         response = client.get(url)
         response.raise_for_status()
 
