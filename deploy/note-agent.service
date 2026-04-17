@@ -1,0 +1,18 @@
+[Unit]
+Description=note trend agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=%i
+WorkingDirectory=/opt/note-trend-agent
+EnvironmentFile=/opt/note-trend-agent/.env
+ExecStartPre=/usr/bin/git -C /opt/note-trend-agent pull --ff-only
+ExecStart=/opt/note-trend-agent/.venv/bin/python src/main.py
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=note-agent
+
+[Install]
+WantedBy=multi-user.target
